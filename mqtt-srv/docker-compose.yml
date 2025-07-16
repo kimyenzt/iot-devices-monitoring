@@ -1,0 +1,23 @@
+
+configs:
+  mqtt-config:
+    content: |
+      persistence true
+      persistence_location /mosquitto/data/
+      log_dest stdout
+
+      listener 1883
+      allow_anonymous true
+
+services:
+  mosquitto:
+    image: eclipse-mosquitto # Must use MQTTv31 for compatibility
+    container_name: mqtt-broker
+    ports:
+      - "1883:1883"        # MQTT protocol
+      - "9001:9001"        # WebSocket (optional)
+    configs:
+      - source: mqtt-config
+        target: /mosquitto/config/mosquitto.conf
+    volumes:
+      - ${PWD}/data:/mosquitto/data/
